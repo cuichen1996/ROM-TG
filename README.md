@@ -1,4 +1,4 @@
-# Learned coarse spaces for two-grid methods
+# Learning coarse spaces for two-grid methods
 
 Research code for **Learning Coarse Spaces for Two-Grid Methods from Smoothed Errors with Applications to High-Contrast Porous Media Flow**, by Chenglong Bao, Chen Cui, and Ruohua Li.
 
