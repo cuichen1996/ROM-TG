@@ -2,7 +2,7 @@
 
 Research code for **Learning Coarse Spaces for Two-Grid Methods from Smoothed Errors with Applications to High-Contrast Porous Media Flow**, by Chenglong Bao, Chen Cui, and Ruohua Li.
 
-The package contains the coarse-space network and losses, finite-volume operators, exact local Schwarz solves, POD and GenEO baselines, right-preconditioned FGMRES, split-pressure Forchheimer solves with independent residual checks, and the current Lean proofs. It is self-contained: no sibling manuscript, original working directory, server paths, or private launch scripts are needed.
+The package contains the coarse-space network and losses, finite-volume operators, exact local Schwarz solves, POD and GenEO baselines, right-preconditioned FGMRES, split-pressure Forchheimer solves with independent residual checks, and the current Lean proofs. 
 
 
 ## Installation
@@ -56,11 +56,6 @@ reference_data/          Compact final data
 docs/                    Reproduction and proof coverage
 ```
 
-## Reproduction status
-
-Static FGMRES and Forchheimer summaries are retained with failures and stopping criteria. The moving-interface FGMRES entry is supplied for a full remeasurement; the historical moving-interface table was produced with FGCR and is not bundled as FGMRES evidence. Historical static timing data and their renderer are retained with explicit FGCR provenance. New FGMRES timing experiments require separate controlled measurements.
-
-Pretrained weights, epoch checkpoint series, generated datasets, full-resolution field arrays, and timing records are not included. Known weight hashes are listed in [reference_data/artifacts.json](reference_data/artifacts.json); no download location is currently assigned. Training a new model does not establish byte-for-byte reproduction of a reported checkpoint.
 
 ## Formal proofs
 
@@ -74,6 +69,4 @@ lake exe cache get
 
 See [lean/README.md](lean/README.md) for build details and [lean/PROOF_MAP.md](lean/PROOF_MAP.md) for precise coverage and remaining unformalized matrix identities. Formal results concern the stated algebraic assumptions; they do not certify floating-point programs or empirical convergence counts.
 
-## Citation and license
 
-Citation metadata is supplied in [CITATION.cff](CITATION.cff). No license has been selected for this release directory.
