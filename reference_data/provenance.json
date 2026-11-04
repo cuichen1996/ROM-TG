@@ -1,0 +1,55 @@
+{
+  "static_per_solve.csv": {
+    "source_sha256": "7f26226443ecb693f4013a9d29c993ea561352e653ea8afe274f027e999ee685",
+    "rows": 360
+  },
+  "snapshot_ablation.csv": {
+    "source_sha256": "3bb9ef5e5471799ad03094ddd84944e7d2542c8ebf6554d7d039ebbe349bcfbd",
+    "rows": 176
+  },
+  "validation_history.csv": {
+    "source_sha256": "ad4c15784d10db2d24fbc4a6eeeef8c6f7367abadac481828b13c0da94ff86ac",
+    "rows": 200
+  },
+  "circle_convergence.csv": {
+    "source_sha256": "b148684ae9b65f944ed3d0a52ad77be0dc80d1b36d711eb8a67784d272adb766",
+    "rows": 20
+  },
+  "forchheimer_iterations.csv": {
+    "source_sha256": "2fe6289b587226d7fa93eefc30913ae2487f9dbe9ba88e77d0be6097ab4e366e",
+    "rows": 6
+  },
+  "forchheimer_terminal_statistics.csv": {
+    "source_sha256": "8c0b7b19d25cc7f0824bc34e94b9eaa85008fd0df5f5aa9e209c081540715cb0",
+    "rows": 6
+  },
+  "forchheimer_trajectories.csv": {
+    "source_sha256": "58c6f78cb5c299b6951c6021b576a023c0c3d027b513eb811691334c720b5ace",
+    "rows": 48
+  },
+  "static_summary.json": {
+    "source_sha256": "8f5038a3e1d64325400a6873d5b85655f10de8cd285247baa6068099b6aa523c"
+  },
+  "ablation_summary.json": {
+    "source_sha256": "45ddf5c1daf4cdffa4153b5019e19251e66b287f23768fb07c7e5554ed4aa214"
+  },
+  "q200_curves.json": {
+    "source_sha256": "8cc34303c53047fe53825a339226928150989669d76422b5c5734c367478a03a"
+  },
+  "q200_spectrum.json": {
+    "source_sha256": "0b75b6b6ef6202cb3c5d759cae01e27b5ac26cec4c46f4c96721572012337b56"
+  },
+  "perturbation_summary.csv": {
+    "rows": 5,
+    "operator_diagnostics": "same-grid, two paired fields",
+    "count_join": "energy-span and field compatibility checked for all 20 spaces",
+    "norms_source_sha256": "e0b316c5994d8d02aa79e274e47c28447df78221b33dca5956fd4a90dec04e08",
+    "counts_source_sha256": "ff2479ea4835d4d3d53c40872d14303bac8b4a05afc71af24e769ec9f31c85e3"
+  },
+  "historical_static_fgcr_timing.csv": {
+    "source_sha256": "9cf43aac86d585041f3830dfc31a8ac5e164314e3389be1f1bf864fc193ff30f",
+    "rows": 20,
+    "solver": "FGCR",
+    "new_fgmres_timing": false
+  }
+}

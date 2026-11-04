@@ -1,0 +1,702 @@
+{
+  "configurations": 360,
+  "accepted": 351,
+  "groups": [
+    {
+      "n": 63,
+      "method": "ASM",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 47.875,
+      "std": 0.5994789404140899,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.505990375801837e-07,
+      "dimensions": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "n": 63,
+      "method": "POD-ref",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 10.5,
+      "std": 0.5,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 7.259600429852548e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 63,
+      "method": "Learned-white",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 13.375,
+      "std": 0.4841229182759271,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.15597095926028e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 63,
+      "method": "Global-POD",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 20.0,
+      "std": 0.5,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 8.146072466252735e-07,
+      "dimensions": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ]
+    },
+    {
+      "n": 63,
+      "method": "TB-SVD",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 19.75,
+      "std": 0.6614378277661477,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.488891096491743e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 63,
+      "method": "GenEO",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 17.875,
+      "std": 2.027159342528357,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 8.553603565830608e-07,
+      "dimensions": [
+        51,
+        54,
+        51,
+        55,
+        50,
+        52,
+        52,
+        52
+      ]
+    },
+    {
+      "n": 127,
+      "method": "ASM",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 93.5,
+      "std": 9.38083151964686,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.983738226695691e-07,
+      "dimensions": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "n": 127,
+      "method": "POD-ref",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 13.625,
+      "std": 0.4841229182759271,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 7.791481895561746e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 127,
+      "method": "Learned-white",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 16.625,
+      "std": 0.6959705453537527,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.71833107376363e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 127,
+      "method": "Global-POD",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 23.875,
+      "std": 0.9270248108869579,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 8.042943029901711e-07,
+      "dimensions": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ]
+    },
+    {
+      "n": 127,
+      "method": "TB-SVD",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 23.75,
+      "std": 0.9682458365518543,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.006683889828818e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 127,
+      "method": "GenEO",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 19.875,
+      "std": 0.5994789404140899,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 7.540697810076941e-07,
+      "dimensions": [
+        86,
+        85,
+        87,
+        89,
+        89,
+        87,
+        87,
+        85
+      ]
+    },
+    {
+      "n": 255,
+      "method": "ASM",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 96.875,
+      "std": 2.6190408549696205,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.418090255441976e-07,
+      "dimensions": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "n": 255,
+      "method": "POD-ref",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 14.625,
+      "std": 0.4841229182759271,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 7.566160073375711e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 255,
+      "method": "Learned-white",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 17.5,
+      "std": 0.5,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 6.507419158381543e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 255,
+      "method": "Global-POD",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 27.0,
+      "std": 0.7071067811865476,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.236433930720471e-07,
+      "dimensions": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ]
+    },
+    {
+      "n": 255,
+      "method": "TB-SVD",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 26.625,
+      "std": 0.6959705453537527,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.533324510849845e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 255,
+      "method": "GenEO",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 24.25,
+      "std": 0.6614378277661477,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 8.662527271438321e-07,
+      "dimensions": [
+        112,
+        116,
+        111,
+        110,
+        113,
+        111,
+        117,
+        112
+      ]
+    },
+    {
+      "n": 511,
+      "method": "ASM",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 7,
+      "mean": 125.14285714285714,
+      "std": 21.1823954630023,
+      "statuses": {
+        "accepted": 7,
+        "iteration_limit": 1
+      },
+      "maximum_true_residual": 9.668702171692946e-07,
+      "dimensions": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "n": 511,
+      "method": "POD-ref",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 16.375,
+      "std": 0.4841229182759271,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.503139663989489e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 511,
+      "method": "Learned-white",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 18.875,
+      "std": 0.7806247497997998,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.621063539435061e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 511,
+      "method": "Global-POD",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 30.25,
+      "std": 0.82915619758885,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.112605433767924e-07,
+      "dimensions": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ]
+    },
+    {
+      "n": 511,
+      "method": "TB-SVD",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 29.25,
+      "std": 1.299038105676658,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.131958569813871e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 511,
+      "method": "GenEO",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 17.875,
+      "std": 0.7806247497997998,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.704628504421732e-07,
+      "dimensions": [
+        256,
+        254,
+        257,
+        254,
+        257,
+        256,
+        257,
+        255
+      ]
+    },
+    {
+      "n": 1023,
+      "method": "ASM",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 1,
+      "mean": 146.0,
+      "std": 0.0,
+      "statuses": {
+        "accepted": 1,
+        "iteration_limit": 7
+      },
+      "maximum_true_residual": 5.712888562568809e-07,
+      "dimensions": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "n": 1023,
+      "method": "POD-ref",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 18.0,
+      "std": 0.0,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 8.890892330957788e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 1023,
+      "method": "Learned-white",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 20.875,
+      "std": 0.5994789404140899,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 8.197414531895045e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 1023,
+      "method": "Global-POD",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 34.75,
+      "std": 0.9682458365518543,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.67155048021783e-07,
+      "dimensions": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ]
+    },
+    {
+      "n": 1023,
+      "method": "TB-SVD",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 32.0,
+      "std": 0.7071067811865476,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 6.877871583856281e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "n": 1023,
+      "method": "GenEO",
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 19.125,
+      "std": 0.5994789404140899,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 8.18732852977577e-07,
+      "dimensions": [
+        407,
+        404,
+        402,
+        407,
+        403,
+        409,
+        410,
+        408
+      ]
+    }
+  ],
+  "statistical_unit": "field within each grid",
+  "standard_deviation": "population, ddof=0",
+  "failure_policy": "success-conditioned mean/std with explicit accepted/total; no cap imputation",
+  "timing_eligible": false
+}

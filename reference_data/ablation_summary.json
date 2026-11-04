@@ -1,0 +1,514 @@
+{
+  "configurations": 176,
+  "accepted": 164,
+  "groups": [
+    {
+      "nu_snap": 5,
+      "q": 20,
+      "solver": "TG",
+      "total": 8,
+      "accepted": 0,
+      "mean": null,
+      "std": null,
+      "statuses": {
+        "iteration_limit": 8
+      },
+      "maximum_true_residual": null,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 5,
+      "q": 20,
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 21.625,
+      "std": 0.8569568250501305,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.987443190617786e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 10,
+      "q": 20,
+      "solver": "TG",
+      "total": 8,
+      "accepted": 4,
+      "mean": 87.75,
+      "std": 11.008519428151999,
+      "statuses": {
+        "accepted": 4,
+        "iteration_limit": 4
+      },
+      "maximum_true_residual": 8.988015350159572e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 10,
+      "q": 20,
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 17.0,
+      "std": 1.0,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 6.496872411682032e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 20,
+      "q": 20,
+      "solver": "TG",
+      "total": 8,
+      "accepted": 8,
+      "mean": 36.375,
+      "std": 3.838538133196022,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.389220842252042e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 20,
+      "q": 20,
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 11.875,
+      "std": 0.5994789404140899,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 8.75329301035926e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 30,
+      "q": 20,
+      "solver": "TG",
+      "total": 8,
+      "accepted": 8,
+      "mean": 29.375,
+      "std": 3.5685256059050494,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.815848741278639e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 30,
+      "q": 20,
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 11.0,
+      "std": 0.0,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.8878203902149e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 50,
+      "q": 15,
+      "solver": "TG",
+      "total": 8,
+      "accepted": 8,
+      "mean": 26.25,
+      "std": 2.817356917396161,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 8.800084407183969e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 50,
+      "q": 15,
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 10.625,
+      "std": 0.4841229182759271,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.26609721830743e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 50,
+      "q": 20,
+      "solver": "TG",
+      "total": 8,
+      "accepted": 8,
+      "mean": 25.875,
+      "std": 2.5708704751503917,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.53758658129106e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 50,
+      "q": 20,
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 10.5,
+      "std": 0.5,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 7.259600429852548e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 50,
+      "q": 30,
+      "solver": "TG",
+      "total": 8,
+      "accepted": 8,
+      "mean": 24.625,
+      "std": 2.7810744326608736,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.556240611950458e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 50,
+      "q": 30,
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 10.25,
+      "std": 0.4330127018922193,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.661278149770445e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 50,
+      "q": 40,
+      "solver": "TG",
+      "total": 8,
+      "accepted": 8,
+      "mean": 24.875,
+      "std": 2.4206145913796355,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.873310442722567e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 50,
+      "q": 40,
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 10.375,
+      "std": 0.4841229182759271,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 8.462548976798342e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 50,
+      "q": 50,
+      "solver": "TG",
+      "total": 8,
+      "accepted": 8,
+      "mean": 25.125,
+      "std": 2.7128168017763383,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.922519622265619e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 50,
+      "q": 50,
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 10.375,
+      "std": 0.4841229182759271,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 7.487302678747049e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 50,
+      "q": 75,
+      "solver": "TG",
+      "total": 8,
+      "accepted": 8,
+      "mean": 24.25,
+      "std": 2.680951323690902,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.246522991233075e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 50,
+      "q": 75,
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 10.375,
+      "std": 0.4841229182759271,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 7.260848187833594e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 75,
+      "q": 20,
+      "solver": "TG",
+      "total": 8,
+      "accepted": 8,
+      "mean": 23.875,
+      "std": 2.027159342528357,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 9.402026300147942e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "nu_snap": 75,
+      "q": 20,
+      "solver": "FGMRES",
+      "total": 8,
+      "accepted": 8,
+      "mean": 10.125,
+      "std": 0.33071891388307384,
+      "statuses": {
+        "accepted": 8
+      },
+      "maximum_true_residual": 7.831688525480639e-07,
+      "dimensions": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ]
+    }
+  ],
+  "timing_eligible": false
+}

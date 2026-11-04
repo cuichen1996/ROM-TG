@@ -1,0 +1,26 @@
+# Local environments and generated runtime artifacts.
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+build/
+dist/
+outputs/
+artifacts/
+.DS_Store
+*.log
+*.pth
+*.pt
+*.npz
+
+# Source distributions include these reviewed configuration/data files.
+!configs/
+!configs/**/*.json
+!reference_data/
+!reference_data/**/*.csv
+!reference_data/**/*.json
+!lean/lake-manifest.json
+!.github/workflows/*.yml
+!src/learned_tg/data/
+!src/learned_tg/data/*.py

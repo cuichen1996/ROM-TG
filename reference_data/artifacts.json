@@ -1,0 +1,41 @@
+{
+  "artifacts": [
+    {
+      "name": "Learned-white",
+      "sha256": "d54041e95a78b2d9957c44ea8acae26a1e2f17d28cd04ca95158bc021f01415c",
+      "included": false,
+      "download_url": null
+    },
+    {
+      "name": "Learned-raw",
+      "sha256": "f2c2a39f19d6ccd4001a68d7a63c551305f0fc1d96dfceb04e79827f0fd05e36",
+      "included": false,
+      "download_url": null
+    },
+    {
+      "name": "TB-SVD",
+      "sha256": "65b829acf65bc94e04bf35c70866dc9abc338e9a0a7db45e2f7bd56280294de6",
+      "included": false,
+      "download_url": null
+    },
+    {
+      "name": "Forchheimer-learned",
+      "sha256": "cee8fcd10aa347c51f27ae322139ca0331e2843f1070f5738007b34880debfa8",
+      "included": false,
+      "download_url": null
+    },
+    {
+      "name": "Moving-interface-learned",
+      "sha256": null,
+      "included": false,
+      "download_url": null,
+      "note": "The release does not assign a verified final weight hash for this model."
+    },
+    {
+      "name": "Figure4-epoch-series",
+      "included": false,
+      "download_url": null,
+      "note": "Two independent training runs; 50 epoch checkpoints per loss; distinct from static-table models."
+    }
+  ]
+}

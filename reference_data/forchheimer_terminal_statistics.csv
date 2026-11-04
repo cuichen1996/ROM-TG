@@ -1,0 +1,7 @@
+alpha, method , final_nonlinear_residual, mean_coarse_dimension
+0    , learned, 7.158710219854818e-07   , 30
+0    , rebuild, 7.958146919576946e-07   , 440.755
+0    , frozen , 7.222944733995862e-07   , 439.5
+10   , learned, 6.862618460252742e-07   , 30
+10   , rebuild, 7.604895429689534e-07   , 439.038125
+10   , frozen , 7.528615564843679e-07   , 439.5

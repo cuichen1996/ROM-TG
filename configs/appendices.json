@@ -1,0 +1,25 @@
+{
+  "grids": [
+    32,
+    64,
+    128,
+    256,
+    512
+  ],
+  "contrast": 10000.0,
+  "radius": 0.23,
+  "n": 63,
+  "k_1d": 10,
+  "omega": 0.8,
+  "sample_seed": 1234,
+  "error_seed": 1235,
+  "smoothing_steps": [
+    0,
+    2,
+    4,
+    16,
+    100,
+    200
+  ],
+  "max_retries": 100
+}
