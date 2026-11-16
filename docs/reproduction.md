@@ -1,6 +1,12 @@
 # Reproduction recipes
 
-These commands assume installation from the repository root. Select a device explicitly, keep each output directory empty, and retain all failed cases. The examples below use CPU by default; add `--device cuda:0` on a suitable compute server. The full grids and training datasets are substantially larger than the quick-start examples.
+These commands assume installation from the repository root. Select a device explicitly, start each run in an empty output directory, and retain all failed cases. The examples below use CPU by default; add `--device cuda:0` on a suitable compute server. The full grids and training datasets are substantially larger than the quick-start examples.
+
+## Interrupted runs and stored bases
+
+A run refuses to write into a non-empty output directory. `static` and `forchheimer` accept `--resume` to continue an interrupted run in its original directory with the original settings; changed settings are rejected. Finished cases are kept as stored and never recomputed. `static` reruns an unfinished solve from the start. `forchheimer` restarts an unfinished trajectory from its newest accepted-step checkpoint and reruns only the unfinished Picard step; a frozen GenEO span is rebuilt from the trajectory's first operator and must reproduce its recorded hash. The other commands have no resume mode.
+
+Coarse bases are recorded by SHA-256 only (`basis/basis.json` for static cases, `raw_span_sha256` and `Q_sha256` in each Forchheimer step result). Pass `--save-bases` to `static` or `forchheimer` to also store the tensors. At grid 1023 a GenEO basis is about 3.5 GB per file, and the full Forchheimer comparison would store roughly 6 TB of them. The Global-POD basis of each grid is always stored, once, as `global_basis.pt`.
 
 ## Numerical contract
 
@@ -62,7 +68,7 @@ learned-tg plot --kind spectrum --input reference_data/q200_spectrum.json \
 
 The q=200 example uses the first held-out 63-grid field and 50 ASM snapshot steps. The ablation shares nested Gaussian prefixes: the original batch of 20 probes followed by 55 additional probes. It tests six smoothing counts at q=20 and five additional q values at 50 smoothing steps, on eight fields with TG and FGMRES: 176 cases. Its final dataset retains 12 failures.
 
-History evaluation uses eight independent validation fields, epochs 10–500 at spacing 10, two losses, and two solvers: 1600 solves and 200 aggregate rows. Figure 4 contains only the two iteration panels. Capped or failed cases are never silently discarded from consumed-update curves; construction failures have no invented solve count. The current plot marks epochs with incomplete acceptance.
+History evaluation stores each validation system once under `systems/`. It uses eight independent validation fields, epochs 10–500 at spacing 10, two losses, and two solvers: 1600 solves and 200 aggregate rows. Figure 4 contains only the two iteration panels. Capped or failed cases are never silently discarded from consumed-update curves; construction failures have no invented solve count. The current plot marks epochs with incomplete acceptance.
 
 ## Forchheimer flow
 

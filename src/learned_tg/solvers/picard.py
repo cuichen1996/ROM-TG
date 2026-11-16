@@ -43,6 +43,11 @@ def validate_step_limit(max_steps,full_trajectory=False):
     if not 1<=max_steps<=limit:
         raise ValueError(f'set Picard updates between 1 and {limit}; full trajectories require explicit opt-in')
 
+def latest_checkpoint(directory):
+    """Newest accepted-step checkpoint of a trajectory directory, or None."""
+    found=sorted(Path(directory).glob('checkpoint_*.pt'),key=lambda p:int(p.stem.split('_')[1]))
+    return found[-1] if found else None
+
 def stored_coefficients(asm,prefix):
     return {prefix+k:getattr(asm,k).detach().cpu().numpy() for k in ['sw','se','sn','ss','sc']}
 
@@ -50,10 +55,18 @@ def stored_coefficients(asm,prefix):
 def solve_picard_split(*,model,kappa0,phi,rhs,x_net,y_net,config,out_dir,
                        sample,settings,checkpoint_sha256,paired_reg=None,
                        resume=None,linear_solver=None,predictor=None,case_kind='primary',
-                       basis_provider=None,independent_checker=None,protocol_signature=None):
+                       basis_provider=None,independent_checker=None,protocol_signature=None,
+                       save_bases=False,allow_existing=False):
+    """Run one Picard trajectory.
+
+    ``save_bases`` also stores the raw and prepared coarse bases of every step
+    (their hashes are always recorded). ``allow_existing`` continues ``out_dir``
+    in place: a finished trajectory is returned as stored, an interrupted one
+    restarts from its newest checkpoint and reruns only the unfinished step.
+    """
     validate_step_limit(settings.max_steps,settings.full_trajectory)
     if settings.coarse_reg<=0:raise ValueError('coarse regularization must be positive')
-    out=Path(out_dir);out.mkdir(parents=True,exist_ok=False)
+    out=Path(out_dir);out.mkdir(parents=True,exist_ok=allow_existing)
     n=int(rhs.shape[-1]);k_1d=int(config.get('k_1d',10));dimension=int(config.get('m_dim',30))
     signature=dict(field=int(sample),alpha=float(settings.alpha),coarse_reg=float(settings.coarse_reg),
         beta=float(settings.beta),mu=float(settings.mu),rho=float(settings.rho),
@@ -63,6 +76,15 @@ def solve_picard_split(*,model,kappa0,phi,rhs,x_net,y_net,config,out_dir,
         phi_sha256=tensor_sha(phi),rhs_sha256=tensor_sha(rhs))
     if protocol_signature is not None:signature['protocol_signature']=protocol_signature
     if basis_provider is not None:signature['basis_provider']=basis_provider.signature
+    if allow_existing and (out/'summary.json').exists():
+        stored=json.loads((out/'resolved_config.json').read_text())['signature']
+        if stored!=json.loads(json.dumps(signature)):
+            raise ValueError(f'--resume found a trajectory with different settings in {out}')
+        state=SplitPressure.zeros_like(rhs);history=[];last=latest_checkpoint(out)
+        if last is not None:
+            state,metadata=load_split_checkpoint(last,device=rhs.device,expected=signature);history=list(metadata['history'])
+        return history,json.loads((out/'summary.json').read_text()),state,[]
+    if allow_existing and resume is None:resume=latest_checkpoint(out)
     write_json(out/'resolved_config.json',dict(signature=signature,settings=asdict(settings),
         checkpoint_config=config,case_kind=case_kind,paired_reg=paired_reg,
         representation='two_float64_components',solver='FGMRES_split_compensated'))
@@ -78,6 +100,10 @@ def solve_picard_split(*,model,kappa0,phi,rhs,x_net,y_net,config,out_dir,
     already_converged=bool(history and all(r['linear_accepted'] for r in history) and nonlinear_converged(
         history[-1]['relative_pressure_change'],history[-1]['nonlinear_residual'],
         update_tol=settings.update_tol,residual_tol=settings.nonlinear_tol))
+    if 0<start_step<settings.max_steps and not already_converged and hasattr(basis_provider,'restore'):
+        # Every trajectory starts from zero pressure, so its first operator can be rebuilt.
+        initial=mobility_from_split(kappa0,SplitPressure.zeros_like(rhs),**parameters)
+        basis_provider.restore(_make_operator(initial.mobility,phi,n=n,k_1d=k_1d,config=config),history)
     for step in ([] if already_converged else range(start_step+1,settings.max_steps+1)):
         before=state.clone()
         try:mobility=mobility_from_split(kappa0,before,**parameters)
@@ -99,7 +125,7 @@ def solve_picard_split(*,model,kappa0,phi,rhs,x_net,y_net,config,out_dir,
 
         def attempt(reg,kind):
             dest=out/f'step_{step:02d}' if kind==case_kind else out/f'paired_reg{reg:g}'/f'step_{step:02d}'
-            dest.mkdir(parents=True,exist_ok=False)
+            dest.mkdir(parents=True,exist_ok=allow_existing)
             counters[:]=[0,0]
             preparation=dict(config,basis_orth_reg=float(reg))
             if basis_provider is not None:preparation.update(basis_provider.preparation)
@@ -152,7 +178,7 @@ def solve_picard_split(*,model,kappa0,phi,rhs,x_net,y_net,config,out_dir,
             torch.save(before.export(),dest/'warm_pressure.pt')
             torch.save(result.pressure.export(),dest/'pressure.pt')
             torch.save({k:prepared[k].cpu() for k in ['A_rom','A_rom_reg','coarse_factor']},dest/'coarse_small_matrices.pt')
-            if basis_provider is not None:
+            if basis_provider is not None and save_bases:
                 torch.save(raw.cpu(),dest/'raw_span.pt')
                 torch.save(prepared['Q'].cpu(),dest/'prepared_basis.pt')
             arrays=stored_coefficients(op.asm,'linear_')

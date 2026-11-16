@@ -15,7 +15,7 @@ from learned_tg.coarse.spectral import _generate_canonical_interface_samples, _b
 from learned_tg.coarse.tb import _load_tb_model, _reconstruct_svd_selection
 from learned_tg.problems.static_helpers import _make_interface_operator, _generate_smoothed_snapshots
 from learned_tg.runtime import initialize, load_model, new_output, read_config
-from learned_tg.solvers.static import dump, prepare, sha, solve, thash
+from learned_tg.solvers.static import cached_metrics, dump, prepare, record_protocol, sha, solve, thash
 from learned_tg.validation.sparse import assemble_fvm_matrix
 
 METHODS = {"asm": "ASM", "pod": "POD-ref", "learned": "Learned-white", "raw": "Learned-raw",
@@ -37,6 +37,21 @@ class Models:
     def __init__(self, args, config):
         self.args, self.config, self.cache = args, config, {}
         self.global_bases = {}
+        self.tb_model, self.tb_bases = None, {}
+
+    def tb_basis(self, n, device):
+        """TB-SVD span on grid n. It depends only on the trunk and the grid, not on the field."""
+        if n not in self.tb_bases:
+            if not self.args.tb_checkpoint or not self.args.tb_metadata:
+                raise ValueError("TB-SVD needs --tb-checkpoint and --tb-metadata.")
+            if self.tb_model is None:
+                meta = read_config(self.args.tb_metadata)
+                self.tb_model = (_load_tb_model(Path(self.args.tb_checkpoint), meta, device),
+                                 _reconstruct_svd_selection(meta)[1])
+            model, selection = self.tb_model
+            trunk = evaluate_trunk_matrix(model, n, device)
+            self.tb_bases = {n: build_tb_basis_with_qr_info(trunk, selection, device, qr_epsilon=1e-10)[0]}
+        return self.tb_bases[n]
 
     def learned(self, label):
         if label not in self.cache:
@@ -72,11 +87,14 @@ def global_basis(n, cfg, output):
     bases, _, rank = _compress_global_bases([b.to(cfg.device) for b in pool], [30], torch.device(cfg.device))
     payload = {"bases": {"global-POD-n30": bases[30].cpu()}, "pool_rank": rank,
                "parameter_seeds": list(range(91234, 91284)), "num_probes": 15}
-    torch.save(payload, output)
+    temporary = output.with_suffix(".pt.tmp")
+    torch.save(payload, temporary)
+    temporary.replace(output)
     return bases[30]
 
 
-def coarse_basis(method, operator, sample, cfg, models, dest, E=None):
+def coarse_basis(method, operator, sample, cfg, models, dest, E=None, save_bases=False):
+    """Build and prepare one coarse space; record its hashes, and its tensors only on request."""
     if method == "ASM":
         return None
     if method == "POD-ref":
@@ -90,12 +108,16 @@ def coarse_basis(method, operator, sample, cfg, models, dest, E=None):
     elif method == "Global-POD":
         if sample["n"] in models.global_bases:
             raw = models.global_bases[sample["n"]]
-        elif models.args.global_cache:
-            path = Path(models.args.global_cache.format(n=sample["n"]))
-            payload = torch.load(path, map_location="cpu", weights_only=False)
-            raw = payload["bases"]["global-POD-n30"].to(cfg.device, dtype=torch.float64)
         else:
-            raw = global_basis(sample["n"], cfg, dest / "global_basis.pt")
+            earlier = (sorted((Path(models.args.output) / f"n{sample['n']}").glob("sample*/Global-POD/basis/global_basis.pt"))
+                       if getattr(models.args, "resume", False) else [])
+            if models.args.global_cache:
+                earlier = [Path(models.args.global_cache.format(n=sample["n"]))]
+            if earlier:
+                payload = torch.load(earlier[0], map_location="cpu", weights_only=False)
+                raw = payload["bases"]["global-POD-n30"].to(cfg.device, dtype=torch.float64)
+            else:
+                raw = global_basis(sample["n"], cfg, dest / "global_basis.pt")
         models.global_bases[sample["n"]] = raw
         prepared, _ = prepare(operator, raw, expected=30)
     elif method == "GenEO":
@@ -106,20 +128,20 @@ def coarse_basis(method, operator, sample, cfg, models, dest, E=None):
         dump(dest / "spectrum.json", diagnostics)
         prepared, _ = prepare(operator, raw, mode="raw")
     elif method == "TB-SVD":
-        if not models.args.tb_checkpoint or not models.args.tb_metadata:
-            raise ValueError("TB-SVD needs --tb-checkpoint and --tb-metadata.")
-        meta = read_config(models.args.tb_metadata)
-        model = _load_tb_model(Path(models.args.tb_checkpoint), meta, torch.device(cfg.device))
-        _, selection = _reconstruct_svd_selection(meta)
-        trunk = evaluate_trunk_matrix(model, sample["n"], torch.device(cfg.device))
-        raw, _ = build_tb_basis_with_qr_info(trunk, selection, torch.device(cfg.device), qr_epsilon=1e-10)
+        raw = models.tb_basis(sample["n"], torch.device(cfg.device))
         if raw.shape[-1] != 15:
             raise RuntimeError("The TB-SVD coarse space must have rank 15.")
         prepared = prepare_tb_coarse_basis(operator, raw, coarse_basis_mode="a_orthonormal")
     else:
         raise ValueError(method)
-    torch.save(raw.detach().cpu(), dest / "raw_basis.pt")
-    torch.save(prepared["Q"].detach().cpu(), dest / "prepared_basis.pt")
+    raw_digest = thash(raw)
+    dump(dest / "basis.json", dict(
+        raw_sha256=raw_digest, raw_shape=list(raw.shape),
+        prepared_sha256=raw_digest if prepared["Q"] is raw else thash(prepared["Q"]),
+        prepared_shape=list(prepared["Q"].shape), tensors_saved=bool(save_bases)))
+    if save_bases:
+        torch.save(raw.detach().cpu(), dest / "raw_basis.pt")
+        torch.save(prepared["Q"].detach().cpu(), dest / "prepared_basis.pt")
     return prepared
 
 
@@ -138,7 +160,7 @@ def system_record(operator, sample, dest):
 def run(args):
     config = read_config(args.config)
     initialize(config.get("seed", 1234), args.device, args.threads)
-    output = new_output(args.output)
+    output = new_output(args.output, args.resume)
     cfg = arguments(config, args.device, args.samples, args.subdomains)
     models = Models(args, config)
     names = list(METHODS) if args.methods == "all" else args.methods.split(",")
@@ -146,10 +168,10 @@ def run(args):
     for method in methods:
         if method.startswith("Learned"):
             models.learned(method)
-    dump(output / "protocol.json", dict(configuration=config, device=args.device,
+    record_protocol(output / "protocol.json", dict(configuration=config, device=args.device,
         checkpoint_sha256=sha(args.checkpoint) if args.checkpoint else None,
         raw_checkpoint_sha256=sha(args.raw_checkpoint) if args.raw_checkpoint else None,
-        solver="FGMRES(50)", timing_eligible=False))
+        subdomains=getattr(cfg, "k_1d", None), solver="FGMRES(50)", timing_eligible=False), args.resume)
     rows = []
     for n in [int(v) for v in args.grids.split(",")]:
         for sample in _generate_canonical_interface_samples(n, cfg):
@@ -163,12 +185,18 @@ def run(args):
             for method in methods:
                 folder = dest / method
                 basis_dir = folder / "basis"
-                basis_dir.mkdir(parents=True)
                 solvers = ["FGMRES"]
                 if args.include_tg and method in {"Learned-white", "Learned-raw"}:
                     solvers.append("TG")
+                if args.resume:
+                    finished = [cached_metrics(folder / solver, base) for solver in solvers]
+                    if all(row is not None for row in finished):
+                        rows.extend(finished)
+                        continue
+                basis_dir.mkdir(parents=True, exist_ok=args.resume)
                 try:
-                    prepared = coarse_basis(method, operator, sample, cfg, models, basis_dir)
+                    prepared = coarse_basis(method, operator, sample, cfg, models, basis_dir,
+                                            save_bases=args.save_bases)
                 except (ValueError, RuntimeError) as error:
                     if isinstance(error, torch.cuda.OutOfMemoryError):
                         raise
@@ -179,7 +207,8 @@ def run(args):
                         rows.append(row)
                     continue
                 for solver in solvers:
-                    rows.append(solve(operator, matrix, sample["b"], prepared, method, solver, folder / solver, base))
+                    rows.append(solve(operator, matrix, sample["b"], prepared, method, solver, folder / solver, base,
+                                      resume=args.resume))
     dump(output / "summary.json", dict(accepted=sum(r["accepted"] for r in rows), results=rows,
                                        timing_eligible=False))
     return rows

@@ -21,7 +21,13 @@ def run(args):
     output = new_output(args.output)
     cfg.update(seed=20261101)
     config = arguments(cfg, args.device, args.samples)
-    samples = _generate_canonical_interface_samples(63, config)
+    # The validation systems do not depend on the checkpoint: build each operator,
+    # sparse matrix and stored system once and reuse them for every epoch and loss.
+    systems = []
+    for sample in _generate_canonical_interface_samples(63, config):
+        op = _make_interface_operator(sample, config)
+        base = system_record(op, sample, output / "systems" / f"sample{sample['sample_id']}")
+        systems.append((sample, op, base, assemble_fvm_matrix(op.asm).tocsr()))
     columns = ["label", "epoch", "solver", "attempted", "accepted", "constructed", "mean_success_updates",
                "mean_consumed_updates", "maximum_accepted_cpu_dd_residual"]
     records = []
@@ -31,12 +37,9 @@ def run(args):
             for label in ["white", "raw"]:
                 path = getattr(args, f"{label}_checkpoints").format(epoch=epoch)
                 model = load_model(path, read_config(getattr(args, f"{label}_config")), args.device)
-                for sample in samples:
+                for sample, op, base, matrix in systems:
                     dest = output / label / f"epoch{epoch:04d}" / f"sample{sample['sample_id']}"
-                    op = _make_interface_operator(sample, config)
-                    base = system_record(op, sample, dest)
-                    matrix = assemble_fvm_matrix(op.asm).tocsr()
-                    basis = dest / "basis"; basis.mkdir()
+                    basis = dest / "basis"; basis.mkdir(parents=True)
                     models = SimpleNamespace(learned=lambda _: model)
                     try:
                         prepared = coarse_basis("Learned-white", op, sample, config, models, basis)

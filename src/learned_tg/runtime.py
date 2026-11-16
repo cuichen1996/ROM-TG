@@ -33,9 +33,10 @@ def initialize(seed=1234, device="cpu", threads=4, dtype=torch.float64):
     return target
 
 
-def new_output(path):
+def new_output(path, resume=False):
+    """Create an empty output directory; ``resume`` permits continuing an existing one."""
     path = Path(path)
-    if path.exists() and any(path.iterdir()):
+    if not resume and path.exists() and any(path.iterdir()):
         raise FileExistsError(f"Output directory is not empty: {path}")
     path.mkdir(parents=True, exist_ok=True)
     return path

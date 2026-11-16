@@ -24,6 +24,19 @@ class GenEOProvider:
         self.signature=dict(method=method,threshold=threshold,max_local_modes=max_local_modes,
             threshold_initial_modes=8,dense_cutoff=512,eig_tol=1e-9,eigen_residual_tol=1e-6,
             preparation='direct_galerkin',frozen_rule='initial_span_current_operator_Gram')
+    def restore(self,op,history):
+        """After a restart, rebuild the frozen span from the trajectory's first operator.
+
+        The span exists only in memory, so it is recomputed and must reproduce the
+        hash recorded at the first Picard step; otherwise the restart is refused.
+        """
+        if self.method!='frozen':return
+        raw,_=build_threshold_geneo_raw_basis(op.asm,threshold=self.threshold,
+            boundary_types=ALL_DIRICHLET_BOUNDARY_TYPES,sample_id=self.field*1000,
+            max_local_modes=self.max_local_modes)
+        if tensor_sha(raw)!=history[0]['raw_span_sha256']:
+            raise RuntimeError('the frozen GenEO span of this interrupted trajectory could not be reproduced')
+        self.raw=raw
     def __call__(self,op,step,mobility):
         reused=self.method=='frozen' and self.raw is not None
         diagnostics=None

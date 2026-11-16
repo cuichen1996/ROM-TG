@@ -48,6 +48,7 @@ class FGMRESFlow(TwoPhaseClosedDropletFVM):
                          subdomain_solver="cholesky", transmissibility="interface_aware")
         self.config = config
         self.last_verification = None
+        self.shared_operator = None  # Set by the driver while several solves use one state.
 
     @torch.no_grad()
     def solve_pressure(self, phi, method="fgmres", learned_model=None, coords=None,
@@ -56,7 +57,9 @@ class FGMRESFlow(TwoPhaseClosedDropletFVM):
                        prepared_coarse_basis=None):
         if method != "fgmres":
             raise ValueError("This driver uses right-preconditioned FGMRES only.")
-        op = self.build_operator(phi, build_local_solver=True)
+        op = self.shared_operator
+        if op is None:
+            op = self.build_operator(phi, build_local_solver=True)
         b = op.rhs(q=None)  # Boundary contribution is part of the effective RHS.
         prepared = prepared_coarse_basis
         if prepared is None and learned_model is not None:
@@ -101,10 +104,12 @@ def run(args):
         # Every comparison uses this same state; none changes the transport path.
         if step in selected:
             torch.save(dict(phi=phi.cpu(), step=step), states / f"step{step:04d}.pt")
+            # One operator (with its local factors) serves all comparison solves and
+            # this step's trajectory solve; it is a function of phi alone.
+            op = flow.shared_operator = flow.build_operator(flow._ensure_phi_4d(phi))
             for method in args.methods.split(","):
                 if method not in {"learned", "rebuild", "frozen"}:
                     raise ValueError(method)
-                op = flow.build_operator(phi)
                 prepared = None
                 if method != "learned":
                     if method != "frozen" or frozen is None:
@@ -123,8 +128,11 @@ def run(args):
                 records.append(dict(step=step, method=method, dimension=info.basis_dim,
                     updates=info.num_iter, **flow.last_verification))
                 dump(output / "comparison.json", dict(results=records, timing_eligible=False))
-        result = flow.step(phi, p0=pressure, pressure_method="fgmres", learned_model=model,
-                           tol=cfg.get("tol", 1e-6), maxiter=cfg.get("max_iter", 200))
+        try:
+            result = flow.step(phi, p0=pressure, pressure_method="fgmres", learned_model=model,
+                               tol=cfg.get("tol", 1e-6), maxiter=cfg.get("max_iter", 200))
+        finally:
+            flow.shared_operator = None
         if not bool(result["pressure_converged"]):
             raise RuntimeError(f"Trajectory pressure solve failed at step {step}; transport was not accepted.")
         if step in selected:

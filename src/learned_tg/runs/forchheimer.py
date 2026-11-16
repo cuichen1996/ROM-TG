@@ -8,7 +8,7 @@ from learned_tg.runtime import initialize, load_model, new_output, read_config
 from learned_tg.solvers.forchheimer_utils import _coords, _rhs, _sample_connected_channelized, _predict_raw_basis
 from learned_tg.solvers.geneo import GenEOProvider
 from learned_tg.solvers.picard import PicardSettings, solve_picard_split, sha, tensor_sha, write_json
-from learned_tg.solvers.static import dump
+from learned_tg.solvers.static import dump, record_protocol
 from learned_tg.validation.split import check_step
 from learned_tg.model.forchheimer_split import mobility_from_split
 
@@ -29,7 +29,7 @@ class LearnedProvider:
 def run(args):
     config = read_config(args.config)
     device = initialize(config.get("evaluation_seed", 20260720), args.device, args.threads)
-    output = new_output(args.output)
+    output = new_output(args.output, args.resume)
     n = args.grid or int(config.get("evaluation_grid", 1023))
     methods = args.methods.split(",")
     if not set(methods) <= {"learned", "rebuild", "frozen"}:
@@ -52,8 +52,9 @@ def run(args):
     protocol = dict(solver="FGMRES_split_compensated", restart=50, linear_tol=1e-6,
                     safety=0.5, max_linear_updates=300, coarse_reg=1e-8,
                     max_picard_steps=args.max_picard_steps, threshold=0.30, max_local_modes=64,
-                    timing_eligible=False, grid=n, samples=args.samples, methods=methods)
-    dump(output / "protocol.json", protocol)
+                    timing_eligible=False, grid=n, samples=args.samples, methods=methods,
+                    subdomains=config["k_1d"])
+    record_protocol(output / "protocol.json", protocol, args.resume)
     rows, representative = [], []
     for field, (phi, permeability, metadata) in enumerate(fields):
         cpu = dict(phi=phi, kappa0=permeability, rhs=_rhs(n, 10.0, "cpu"))
@@ -77,7 +78,8 @@ def run(args):
                     config=config, out_dir=case, sample=field,
                     settings=PicardSettings(alpha=alpha, max_steps=args.max_picard_steps, full_trajectory=True),
                     checkpoint_sha256=checkpoint_digest, basis_provider=provider,
-                    independent_checker=independent, protocol_signature=protocol)
+                    independent_checker=independent, protocol_signature=protocol,
+                    save_bases=args.save_bases, allow_existing=args.resume)
                 rows.append(dict(summary, method=method, artifact_dir=case.name))
                 dump(output / "summary.json", dict(results=rows, timing_eligible=False))
                 if field == 0 and method == "learned" and summary["nonlinear_converged"]:

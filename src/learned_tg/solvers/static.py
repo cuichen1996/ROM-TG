@@ -28,7 +28,27 @@ def dump(path,data):
 
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
-def thash(t):return hashlib.sha256(t.detach().cpu().contiguous().numpy().tobytes()).hexdigest()
+def thash(t):
+    # Hash the tensor's bytes in place; ``tobytes`` would copy a multi-GB basis first.
+    return hashlib.sha256(t.detach().cpu().contiguous().numpy().reshape(-1).data).hexdigest()
+
+def record_protocol(path,protocol,resume=False):
+    """Write the run protocol, or on resume require that it is unchanged."""
+    path=Path(path);protocol=safe(protocol)
+    if resume and path.exists():
+        previous=json.loads(path.read_text())
+        changed=sorted(k for k in set(previous)|set(protocol) if previous.get(k)!=protocol.get(k))
+        if changed:raise ValueError(f'--resume needs the original run settings; these differ from {path}: {changed}')
+    else:dump(path,protocol)
+
+def cached_metrics(dest,base):
+    """Return a finished case's stored row, after checking it is the same linear system."""
+    path=Path(dest)/'metrics.json'
+    if not path.exists():return None
+    row=json.loads(path.read_text())
+    for key in ['n','sample_id','field_sha256','rhs_sha256']:
+        if row.get(key)!=base[key]:raise ValueError(f'--resume found a result for a different system in {path}: {key}')
+    return row
 
 def prepare(op,raw,mode='a_orthonormal',expected=None):
     assert bool(torch.isfinite(raw).all())
@@ -57,9 +77,10 @@ def tg(op,b,prepared,x):
         basis_smooth_mode='none',basis_smooth_steps=0,basis_smooth_omega=0.,coarse_basis_orth_metric='a',orth_reg=1e-10)
 
 @torch.no_grad()
-def solve(op,A,b,prepared,method,solver,dest,base):
+def solve(op,A,b,prepared,method,solver,dest,base,resume=False):
     if (dest/'metrics.json').exists():return json.loads((dest/'metrics.json').read_text())
-    dest.mkdir(parents=True,exist_ok=False);n=b.shape[-1];zero=torch.zeros_like(b)
+    # A directory without metrics.json is an interrupted case; resume reruns it in place.
+    dest.mkdir(parents=True,exist_ok=resume);n=b.shape[-1];zero=torch.zeros_like(b)
     B=(lambda r:op.solution_smooth(torch.zeros_like(r),r,mode='asm',M_smooth=1,omega=.8)) if method=='ASM' else (lambda r:tg(op,r,prepared,torch.zeros_like(r)))
     raw_forward=op.asm.forward;actions=[0,0]
     def counted(self,x):actions[0]+=1;actions[1]+=int(x.shape[0]*x.shape[1]);return raw_forward(x)

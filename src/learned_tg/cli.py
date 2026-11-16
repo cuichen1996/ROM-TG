@@ -11,6 +11,13 @@ def _common(parser):
     parser.add_argument("--threads", type=int, default=4)
 
 
+def _campaign(parser):
+    parser.add_argument("--resume", action="store_true",
+                        help="Continue an interrupted run in its output directory; finished cases are kept")
+    parser.add_argument("--save-bases", action="store_true",
+                        help="Also store raw and prepared coarse-basis tensors (large); hashes are always recorded")
+
+
 def parser():
     root = argparse.ArgumentParser(prog="learned-tg", description="Learned coarse-space two-grid experiments")
     root.add_argument("--version", action="version", version="%(prog)s 0.1.0")
@@ -42,6 +49,7 @@ def parser():
     static.add_argument("--global-cache", help="Optional Global-POD cache; {n} expands to grid size")
     static.add_argument("--tb-checkpoint")
     static.add_argument("--tb-metadata")
+    _campaign(static)
     forch = commands.add_parser("forchheimer", help="Independently validated split-pressure Picard comparison")
     _common(forch)
     forch.add_argument("--grid", type=int)
@@ -51,6 +59,7 @@ def parser():
     forch.add_argument("--max-picard-steps", type=int, default=100)
     forch.add_argument("--subdomains", type=int)
     forch.add_argument("--checkpoint")
+    _campaign(forch)
     moving = commands.add_parser("moving", help="Moving-interface pressure/transport experiment")
     _common(moving)
     moving.add_argument("--grid", type=int)
